@@ -11,45 +11,51 @@ window.addEventListener('DOMContentLoaded', ()=>{
         formData.forEach((value,key)=>{
             obj[key] = value;
         });
-        let json = JSON.stringify(obj);
+        // let json = JSON.stringify(obj);
 
-        const request = new XMLHttpRequest();
-        request.open('POST', ' http://localhost:3000/people');
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        request.send(json);
-        request.addEventListener('load', function(){
-            if (request.status == 200){
-                let data = JSON.parse(request.response);
+        // const request = new XMLHttpRequest();
+        // request.open('POST', ' http://localhost:3000/people');
+        // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        // request.send(json);
+        // request.addEventListener('load', function(){
+        //     if (request.status == 200){
+        //         let data = JSON.parse(request.response);
 
-                console.log(data);
-                // createCards(data);
+        //         console.log(data);
+        //         // createCards(data);
 
-            } else {
-                console.error('Что-то пошло не так...');
-            }
-        });
+        //     } else {
+        //         console.error('Что-то пошло не так...');
+        //     }
+        // });
 
         // с помощью fetch , axios
 
-        // getResource('http://localhost:3000/people')
-        //     .then(data=> createCards(data.data))
-        //     .catch(err=> console.error(err));
+        getResource('http://localhost:3000/people', obj)
+            .then(data=> createCards(data.data))
+            .catch(err=> console.error(err));
 
 
-        this.remove();
+        // this.remove();
     }
     form.addEventListener('submit', (e)=> req(e), {once: true});
     
-    // async function getResource(url){
-    //     const res = await fetch(`${url}`);
+    async function getResource(url, data){
+        const res = await fetch(`${url}`, {
+            method: "POST",
+            headers:{
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
 
-    //     if(!res.ok){
-    //         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-    //     }
+        if(!res.ok){
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
 
-    //     return await res.json();
+        return await res.json();
 
-    // }
+    }
 
     // async function getResource(url){
     //     const res = await axios(`${url}`);
